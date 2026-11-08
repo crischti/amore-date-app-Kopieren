@@ -47,3 +47,7 @@ Dates lassen sich mit Titel, Datum, Uhrzeit und optionaler Notiz planen. Die Üb
 
 ## Fehlerbehebung Date-Planer
 Der Speichern-Button hat jetzt zusätzlich einen direkten Klick-Handler und eine eindeutige lokale Datumsformatierung. Die Cache-Version wurde erhöht, damit der Browser die aktualisierte App-Datei lädt.
+
+
+## Aktualisierung: nächstes Date und Erinnerungen
+Die Startseite zeigt nun das nächste geplante Date samt Countdown. Optional können Browser-Benachrichtigungen freigegeben werden; Amore prüft dann Erinnerungen 24 Stunden und 2 Stunden vorher, solange die App geöffnet ist. Beim erneuten Öffnen werden noch ausstehende Erinnerungen nachgeholt. Ein normaler Browser-Timer läuft nicht zuverlässig weiter, wenn die App vollständig geschlossen ist; verlässliche iPhone-Push-Nachrichten benötigen später einen Push-Dienst.

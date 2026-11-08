@@ -87,6 +87,8 @@ function saveFavorites() {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
   renderFavorites();
 renderPlannedDates();
+checkDateReminders();
+setInterval(checkDateReminders, 60 * 1000);
 }
 
 function renderFavorites() {
@@ -178,11 +180,107 @@ function persistPlannedDates() {
   renderPlannedDates();
 }
 
+const REMINDER_FIRED_KEY = "amore-reminders-fired-v1";
+
+function readFiredReminders() {
+  try { return JSON.parse(localStorage.getItem(REMINDER_FIRED_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function writeFiredReminders(values) {
+  localStorage.setItem(REMINDER_FIRED_KEY, JSON.stringify(values));
+}
+
+function plannedTimestamp(item) {
+  return new Date(`${item.date}T${item.time}:00`).getTime();
+}
+
+function updateNextDateCard() {
+  const upcoming = plannedDates
+    .filter(item => plannedTimestamp(item) > Date.now())
+    .sort((a, b) => plannedTimestamp(a) - plannedTimestamp(b))[0];
+  const card = $("nextDateCard");
+  if (!upcoming) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  $("nextDateTitle").textContent = upcoming.title;
+  const [year, month, day] = upcoming.date.split("-").map(Number);
+  const dateObj = new Date(year, month - 1, day);
+  $("nextDateWhen").textContent =
+    new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" }).format(dateObj) +
+    " · " + upcoming.time + " Uhr";
+  const days = Math.ceil((plannedTimestamp(upcoming) - Date.now()) / 86400000);
+  $("nextDateCountdown").textContent = days <= 0 ? "Heute ist euer Date!" : days === 1 ? "Noch 1 Tag" : `Noch ${days} Tage`;
+}
+
+async function showAmoreNotification(title, body) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return false;
+  try {
+    const registration = "serviceWorker" in navigator ? await navigator.serviceWorker.ready : null;
+    if (registration && registration.showNotification) {
+      await registration.showNotification(title, { body, icon: "./assets/icon.svg", badge: "./assets/icon.svg", tag: "amore-" + title });
+    } else {
+      new Notification(title, { body });
+    }
+    return true;
+  } catch (error) {
+    console.warn("Amore notification could not be shown", error);
+    return false;
+  }
+}
+
+function checkDateReminders() {
+  if (!plannedDates.length) return;
+  const fired = readFiredReminders();
+  const now = Date.now();
+  const updated = [...fired];
+  for (const item of plannedDates) {
+    const eventTime = plannedTimestamp(item);
+    if (!Number.isFinite(eventTime) || eventTime <= now) continue;
+
+    for (const reminder of [
+      { key: "day", offset: 24 * 60 * 60 * 1000, label: "Morgen ist euer Date" },
+      { key: "two-hours", offset: 2 * 60 * 60 * 1000, label: "Euer Date beginnt in 2 Stunden" }
+    ]) {
+      const fireAt = eventTime - reminder.offset;
+      const reminderKey = `${item.id}:${reminder.key}`;
+      // Beim erneuten Öffnen wird eine verpasste Erinnerung nachgeholt,
+      // sofern das Date noch bevorsteht.
+      if (now >= fireAt && !updated.includes(reminderKey)) {
+        if (Notification.permission === "granted") {
+          showAmoreNotification(reminder.label, item.title + " · " + item.time + " Uhr");
+        }
+        updated.push(reminderKey);
+      }
+    }
+  }
+  writeFiredReminders(updated);
+}
+
+$("enableRemindersBtn").addEventListener("click", async () => {
+  if (!("Notification" in window)) {
+    $("reminderStatus").textContent = "Dieser Browser unterstützt keine Web-Benachrichtigungen.";
+    return;
+  }
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    $("reminderStatus").textContent = "Erinnerungen aktiviert. Amore prüft sie, solange die App geöffnet ist.";
+    $("enableRemindersBtn").textContent = "Aktiviert";
+    $("enableRemindersBtn").disabled = true;
+    checkDateReminders();
+  } else {
+    $("reminderStatus").textContent = "Keine Berechtigung erteilt. Du kannst Benachrichtigungen in den Browser-Einstellungen erlauben.";
+  }
+});
+
 function renderPlannedDates() {
   const list = $("plannedList");
   list.replaceChildren();
   const sorted = [...plannedDates].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
   $("plannedCount").textContent = String(sorted.length);
+  updateNextDateCard();
 
   if (!sorted.length) {
     const empty = document.createElement("p");
@@ -203,6 +301,10 @@ function renderPlannedDates() {
     const dateObj = new Date(year, month - 1, day);
     when.textContent = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(dateObj) + " · " + date.time + " Uhr";
     card.append(title, when);
+    const reminderInfo = document.createElement("div");
+    reminderInfo.className = "reminder-label";
+    reminderInfo.textContent = "Erinnerung: 1 Tag und 2 Stunden vorher (bei aktiver App)";
+    card.appendChild(reminderInfo);
 
     if (date.note) {
       const note = document.createElement("div");
@@ -291,3 +393,5 @@ function updateTogetherCounter() {
 updateTogetherCounter();
 renderFavorites();
 renderPlannedDates();
+checkDateReminders();
+setInterval(checkDateReminders, 60 * 1000);

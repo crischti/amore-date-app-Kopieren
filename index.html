@@ -26,6 +26,13 @@
         <span class="counter-label">TAGE ZUSAMMEN</span>
         <small id="anniversaryLabel">Seit dem 28.06.2025</small>
       </div>
+      <section class="next-date-card" id="nextDateCard" hidden aria-live="polite">
+        <p class="eyebrow">EURE NÄCHSTE VERABREDUNG</p>
+        <strong id="nextDateTitle"></strong>
+        <span id="nextDateWhen"></span>
+        <b id="nextDateCountdown"></b>
+        <a href="#planner">Zum Date-Planer ↓</a>
+      </section>
       <p class="muted">Ein bisschen mehr Wir-Zeit.</p>
       <a class="scroll-link" href="#discover">Entdecke eure Ideen <span>↓</span></a>
     </section>
@@ -127,6 +134,14 @@
         </div>
         <button class="primary" type="submit">♥ Date einplanen</button>
       </form>
+      <div class="reminder-controls">
+        <div>
+          <strong>Erinnerungen</strong>
+          <p class="muted">1 Tag und 2 Stunden vor einem Date – solange Amore im Browser aktiv ist.</p>
+        </div>
+        <button class="secondary" id="enableRemindersBtn" type="button">Erinnerungen aktivieren</button>
+      </div>
+      <p class="fineprint" id="reminderStatus">Benachrichtigungen sind noch nicht aktiviert.</p>
       <div class="planned-heading"><h3>Unsere geplanten Dates</h3><span id="plannedCount" class="count-pill">0</span></div>
       <div id="plannedList" class="planned-list">
         <p class="empty-state">Noch keine Dates geplant. Wähle eine Idee aus deiner Merkliste oder trage oben ein eigenes Date ein.</p>
