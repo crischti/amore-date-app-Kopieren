@@ -1,0 +1,17 @@
+{
+  "name": "Amore – Für uns zwei",
+  "short_name": "Amore",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101014",
+  "theme_color": "#101014",
+  "description": "Eure persönliche Date-App",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

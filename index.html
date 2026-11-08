@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="Amore – eure persönliche Date-App">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Amore – Für uns zwei</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">amore<span>♥</span></div>
+    <button class="icon-btn" id="settingsBtn" aria-label="Einstellungen">⚙</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow" id="todayLabel">FÜR EUCH ZWEI</p>
+      <h1>Hey, <em>Amore.</em></h1>
+      <div class="together-counter" aria-live="polite">
+        <span class="counter-heart">♥</span>
+        <strong id="daysTogether">—</strong>
+        <span class="counter-label">TAGE ZUSAMMEN</span>
+        <small id="anniversaryLabel">Seit dem 28.06.2025</small>
+      </div>
+      <p class="muted">Ein bisschen mehr Wir-Zeit.</p>
+      <a class="scroll-link" href="#discover">Entdecke eure Ideen <span>↓</span></a>
+    </section>
+
+    <section class="panel" id="discover">
+      <div class="section-heading">
+        <div><p class="eyebrow">ZEIT NUR FÜR EUCH</p><h2>Was machen wir heute?</h2></div>
+        <span class="heart">♥</span>
+      </div>
+      <div class="field">
+        <label>Budget</label>
+        <div class="budget-grid" id="budgetOptions">
+          <button class="budget active" data-budget="20"><b>Günstig</b><small>0–20 €</small></button>
+          <button class="budget" data-budget="50"><b>Mittel</b><small>0–50 €</small></button>
+          <button class="budget" data-budget="100"><b>Mehr Spielraum</b><small>0–100 €</small></button>
+          <button class="budget" data-budget="101"><b>Besonders</b><small>100 €+</small></button>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label for="duration">Wie lange?</label>
+          <select id="duration">
+            <option value="any">Egal</option>
+            <option value="short">Unter 1 Stunde</option>
+            <option value="medium">1–2 Stunden</option>
+            <option value="long">2–4 Stunden</option>
+            <option value="day">Halber / ganzer Tag</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="kind">Date-Stimmung</label>
+          <select id="kind">
+            <option value="any">Überrasch mich</option>
+            <option value="romantic">Romantisch</option>
+            <option value="active">Aktiv</option>
+            <option value="cozy">Gemütlich</option>
+            <option value="creative">Außergewöhnlich</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="radius">Umkreis ab Gerlingen <strong id="radiusValue">25 km</strong></label>
+        <input id="radius" type="range" min="5" max="100" step="5" value="25">
+        <div class="range-labels"><span>5 km</span><span>100 km</span></div>
+      </div>
+      <button class="primary" id="generateBtn">♥  Date-Idee für uns finden</button>
+      <p class="fineprint">Ausgangspunkt: Gerlingen, Baden-Württemberg. Entfernungen und konkrete Orte werden im nächsten Schritt mit Kartendaten ergänzt.</p>
+    </section>
+
+    <section class="idea-card" id="ideaCard" hidden>
+      <div class="idea-image" id="ideaImage"><span class="tag" id="ideaTag">DATE-IDEE</span></div>
+      <div class="idea-content">
+        <p class="eyebrow" id="ideaMeta">0–20 € · 1–2 STUNDEN</p>
+        <h2 id="ideaTitle">Euer nächstes Date</h2>
+        <p id="ideaDescription" class="muted"></p>
+        <div class="idea-actions">
+          <button class="secondary" id="anotherBtn">Andere Idee</button>
+          <button class="primary" id="sendIdeaBtn">Date vorschlagen ♥</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel message-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">NUR FÜR EUCH</p><h2>Eine Nachricht für dich</h2></div>
+        <span class="heart">♡</span>
+      </div>
+      <p class="muted">Hier entsteht euer privater Chat. Sobald wir eure beiden Konten verbunden haben, könnt ihr Nachrichten in Echtzeit austauschen.</p>
+      <div class="message-preview">
+        <div class="bubble">Ich freue mich auf unser nächstes Date. ♥</div>
+        <small>Vorschau – noch nicht gesendet</small>
+      </div>
+      <button class="secondary full" id="chatInfoBtn">Nachrichten einrichten</button>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">EURE APP</p>
+      <h2>Zusammen verbunden</h2>
+      <p class="muted">Im nächsten Einrichtungsschritt richten wir zwei private Zugänge und einen Einladungscode ein. So bleiben eure Vorschläge und Nachrichten auf beiden Handys synchron.</p>
+      <div class="status-row"><span class="status-dot"></span><span>Lokale Vorschau aktiv · Konten noch nicht verbunden</span></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="selected" href="#discover">♥<small>Entdecken</small></a>
+    <a href="#ideaCard">✦<small>Dates</small></a>
+    <a href="#discover" id="navChat">♡<small>Nachrichten</small></a>
+  </nav>
+
+  <dialog id="infoDialog">
+    <div class="dialog-inner">
+      <button class="close" id="closeDialog">×</button>
+      <p class="eyebrow">NÄCHSTER SCHRITT</p>
+      <h2 id="dialogTitle">Amore gemeinsam einrichten</h2>
+      <p id="dialogText" class="muted">Diese Vorschau funktioniert bereits auf diesem Gerät. Für echte Nachrichten, gemeinsame Konten und Push-Mitteilungen verbinden wir als Nächstes eine Supabase-Datenbank und richten den privaten Zugang für euch beide ein.</p>
+      <button class="primary full" id="dialogOk">Alles klar</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+  </script>
+</body>
+</html>
