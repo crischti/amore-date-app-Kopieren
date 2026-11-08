@@ -1,4 +1,4 @@
-const CACHE = "amore-v2";
+const CACHE = "amore-v3";
 const FILES = [
   "./",
   "./index.html",

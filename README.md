@@ -43,3 +43,7 @@ Die Merkliste speichert Date-Ideen lokal im Browser über localStorage. Sie blei
 
 ## Aktualisierung: Date-Planer
 Dates lassen sich mit Titel, Datum, Uhrzeit und optionaler Notiz planen. Die Übersicht sortiert nach Datum/Uhrzeit und erlaubt das Löschen geplanter Dates. „Planen“ in der Merkliste übernimmt den Titel in das Formular. Alle Planungen liegen lokal im Browser und werden nicht zwischen Geräten synchronisiert. Push-Erinnerungen sind noch nicht enthalten.
+
+
+## Fehlerbehebung Date-Planer
+Der Speichern-Button hat jetzt zusätzlich einen direkten Klick-Handler und eine eindeutige lokale Datumsformatierung. Die Cache-Version wurde erhöht, damit der Browser die aktualisierte App-Datei lädt.

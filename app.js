@@ -227,13 +227,29 @@ function renderPlannedDates() {
   });
 }
 
-$("planDate").min = new Date().toLocaleDateString("en-CA");
-$("planForm").addEventListener("submit", event => {
-  event.preventDefault();
+function localISODate(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+$("planDate").min = localISODate();
+
+function addPlannedDate() {
   const title = $("planTitle").value.trim();
   const date = $("planDate").value;
   const time = $("planTime").value;
-  if (!title || !date || !time) return;
+
+  if (!title || !date || !time) {
+    openInfo("Angaben fehlen", "Bitte trage einen Date-Namen, ein Datum und eine Uhrzeit ein.");
+    return;
+  }
+
+  if (date < localISODate()) {
+    openInfo("Datum liegt in der Vergangenheit", "Bitte wähle heute oder einen zukünftigen Tag aus.");
+    return;
+  }
 
   plannedDates.push({
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
@@ -242,11 +258,25 @@ $("planForm").addEventListener("submit", event => {
     time,
     note: $("planNote").value.trim()
   });
+
   persistPlannedDates();
   $("planForm").reset();
   $("planTime").value = "18:00";
-  $("planDate").min = new Date().toLocaleDateString("en-CA");
-  openInfo("Date ist geplant!", "Dein Date wurde in Amore gespeichert. Du findest es unten in der Übersicht „Unsere geplanten Dates“.");
+  $("planDate").min = localISODate();
+  openInfo("Date ist geplant!", "Dein Date wurde gespeichert. Du findest es jetzt in der Übersicht „Unsere geplanten Dates“.");
+}
+
+$("planForm").addEventListener("submit", event => {
+  event.preventDefault();
+  addPlannedDate();
+});
+
+// Zusätzlicher direkter Klick-Handler: funktioniert auch dann, wenn ein Browser
+// das native Formular-Submit-Verhalten unterschiedlich behandelt.
+const planSubmitButton = $("planForm").querySelector('button[type="submit"]');
+planSubmitButton.addEventListener("click", event => {
+  event.preventDefault();
+  if ($("planForm").reportValidity()) addPlannedDate();
 });
 
 // Beziehungstage seit dem 28.06.2025: wird bei jedem Öffnen automatisch neu berechnet.
