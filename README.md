@@ -39,3 +39,7 @@ Die Vorschau enthält jetzt eine größere lokale Date-Datenbank. Budget, Dauer 
 
 ## Aktualisierung: persönliche Merkliste
 Die Merkliste speichert Date-Ideen lokal im Browser über localStorage. Sie bleibt auf dem jeweiligen Gerät erhalten, wird aber nicht zwischen deinem iPhone und dem iPhone deiner Freundin synchronisiert. Beide können unabhängig voneinander ihre Favoriten speichern. Es ist kein Konto und kein Backend nötig.
+
+
+## Aktualisierung: Date-Planer
+Dates lassen sich mit Titel, Datum, Uhrzeit und optionaler Notiz planen. Die Übersicht sortiert nach Datum/Uhrzeit und erlaubt das Löschen geplanter Dates. „Planen“ in der Merkliste übernimmt den Titel in das Formular. Alle Planungen liegen lokal im Browser und werden nicht zwischen Geräten synchronisiert. Push-Erinnerungen sind noch nicht enthalten.

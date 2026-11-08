@@ -99,6 +99,40 @@
       </div>
     </section>
 
+
+    <section class="panel" id="planner">
+      <div class="section-heading">
+        <div><p class="eyebrow">EURE GEMEINSAME ZEIT</p><h2>Date-Planer</h2></div>
+        <span class="heart">♡</span>
+      </div>
+      <p class="muted">Plane ein Date mit Datum und Uhrzeit. Deine Planung wird nur auf diesem Gerät gespeichert.</p>
+      <form id="planForm" class="plan-form">
+        <div class="field">
+          <label for="planTitle">Was habt ihr vor?</label>
+          <input id="planTitle" type="text" maxlength="80" placeholder="z. B. Picknick zum Sonnenuntergang" required>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="planDate">Datum</label>
+            <input id="planDate" type="date" required>
+          </div>
+          <div class="field">
+            <label for="planTime">Uhrzeit</label>
+            <input id="planTime" type="time" value="18:00" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="planNote">Notiz (optional)</label>
+          <textarea id="planNote" rows="2" maxlength="240" placeholder="Treffpunkt, was mitbringen ..."></textarea>
+        </div>
+        <button class="primary" type="submit">♥ Date einplanen</button>
+      </form>
+      <div class="planned-heading"><h3>Unsere geplanten Dates</h3><span id="plannedCount" class="count-pill">0</span></div>
+      <div id="plannedList" class="planned-list">
+        <p class="empty-state">Noch keine Dates geplant. Wähle eine Idee aus deiner Merkliste oder trage oben ein eigenes Date ein.</p>
+      </div>
+    </section>
+
     <section class="panel">
       <p class="eyebrow">EURE APP</p>
       <h2>Deine persönliche Date-Sammlung</h2>
@@ -111,7 +145,7 @@
   <nav class="bottom-nav">
     <a class="selected" href="#discover">♥<small>Entdecken</small></a>
     <a href="#favorites">♡<small>Merkliste</small></a>
-    <a href="#ideaCard">✦<small>Dates</small></a>
+    <a href="#planner">✦<small>Planer</small></a>
   </nav>
 
   <dialog id="infoDialog">

@@ -86,6 +86,7 @@ function loadFavorites() {
 function saveFavorites() {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
   renderFavorites();
+renderPlannedDates();
 }
 
 function renderFavorites() {
@@ -111,6 +112,17 @@ function renderFavorites() {
     const meta = document.createElement("small");
     meta.textContent = `${idea.cost} · ${idea.time}`;
     copy.append(title, meta);
+    const actions = document.createElement("div");
+    actions.className = "favorite-actions";
+    const plan = document.createElement("button");
+    plan.className = "plan-favorite";
+    plan.type = "button";
+    plan.textContent = "Planen";
+    plan.addEventListener("click", () => {
+      $("planTitle").value = idea.title;
+      $("planner").scrollIntoView({ behavior: "smooth", block: "start" });
+      $("planDate").focus({ preventScroll: true });
+    });
     const remove = document.createElement("button");
     remove.className = "remove-favorite";
     remove.type = "button";
@@ -120,7 +132,8 @@ function renderFavorites() {
       saveFavorites();
       updateSaveButton();
     });
-    item.append(swatch, copy, remove);
+    actions.append(plan, remove);
+    item.append(swatch, copy, actions);
     list.appendChild(item);
   });
 }
@@ -148,6 +161,94 @@ $("closeDialog").addEventListener("click", () => $("infoDialog").close());
 $("dialogOk").addEventListener("click", () => $("infoDialog").close());
 $("todayLabel").textContent = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" }).format(new Date()).toUpperCase();
 
+const PLANNED_KEY = "amore-planned-v1";
+let plannedDates = loadPlannedDates();
+
+function loadPlannedDates() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PLANNED_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistPlannedDates() {
+  localStorage.setItem(PLANNED_KEY, JSON.stringify(plannedDates));
+  renderPlannedDates();
+}
+
+function renderPlannedDates() {
+  const list = $("plannedList");
+  list.replaceChildren();
+  const sorted = [...plannedDates].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  $("plannedCount").textContent = String(sorted.length);
+
+  if (!sorted.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Noch keine Dates geplant. Wähle eine Idee aus deiner Merkliste oder trage oben ein eigenes Date ein.";
+    list.appendChild(empty);
+    return;
+  }
+
+  sorted.forEach(date => {
+    const card = document.createElement("article");
+    card.className = "planned-item";
+    const title = document.createElement("strong");
+    title.textContent = date.title;
+    const when = document.createElement("div");
+    when.className = "planned-date";
+    const [year, month, day] = date.date.split("-").map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    when.textContent = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(dateObj) + " · " + date.time + " Uhr";
+    card.append(title, when);
+
+    if (date.note) {
+      const note = document.createElement("div");
+      note.className = "planned-note";
+      note.textContent = date.note;
+      card.appendChild(note);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "planned-actions";
+    const remove = document.createElement("button");
+    remove.className = "remove-favorite";
+    remove.type = "button";
+    remove.textContent = "Date löschen";
+    remove.addEventListener("click", () => {
+      plannedDates = plannedDates.filter(item => item.id !== date.id);
+      persistPlannedDates();
+    });
+    actions.appendChild(remove);
+    card.appendChild(actions);
+    list.appendChild(card);
+  });
+}
+
+$("planDate").min = new Date().toLocaleDateString("en-CA");
+$("planForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const title = $("planTitle").value.trim();
+  const date = $("planDate").value;
+  const time = $("planTime").value;
+  if (!title || !date || !time) return;
+
+  plannedDates.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    title,
+    date,
+    time,
+    note: $("planNote").value.trim()
+  });
+  persistPlannedDates();
+  $("planForm").reset();
+  $("planTime").value = "18:00";
+  $("planDate").min = new Date().toLocaleDateString("en-CA");
+  openInfo("Date ist geplant!", "Dein Date wurde in Amore gespeichert. Du findest es unten in der Übersicht „Unsere geplanten Dates“.");
+});
+
 // Beziehungstage seit dem 28.06.2025: wird bei jedem Öffnen automatisch neu berechnet.
 function updateTogetherCounter() {
   const start = new Date(2025, 5, 28);
@@ -159,3 +260,4 @@ function updateTogetherCounter() {
 }
 updateTogetherCounter();
 renderFavorites();
+renderPlannedDates();
