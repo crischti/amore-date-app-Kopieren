@@ -35,3 +35,7 @@ Der Zähler wird aus dem Startdatum 28.06.2025 und dem aktuellen lokalen Datum d
 
 ## Aktualisierung: Date-Ideen und Filter
 Die Vorschau enthält jetzt eine größere lokale Date-Datenbank. Budget, Dauer und Stimmung werden gemeinsam angewendet. Wenn es für eine Filterkombination keine passende Idee gibt, zeigt Amore einen Hinweis statt stillschweigend andere Filter zu ignorieren. Die Umkreisauswahl ist vorerst nur die Einstellung für die spätere Umkreissuche; echte Orte und Entfernungen benötigen anschließend Kartendaten.
+
+
+## Aktualisierung: persönliche Merkliste
+Die Merkliste speichert Date-Ideen lokal im Browser über localStorage. Sie bleibt auf dem jeweiligen Gerät erhalten, wird aber nicht zwischen deinem iPhone und dem iPhone deiner Freundin synchronisiert. Beide können unabhängig voneinander ihre Favoriten speichern. Es ist kein Konto und kein Backend nötig.

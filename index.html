@@ -83,36 +83,35 @@
         <p id="ideaDescription" class="muted"></p>
         <div class="idea-actions">
           <button class="secondary" id="anotherBtn">Andere Idee</button>
-          <button class="primary" id="sendIdeaBtn">Date vorschlagen ♥</button>
+          <button class="primary" id="saveIdeaBtn">♡ Merken</button>
         </div>
       </div>
     </section>
 
-    <section class="panel message-panel">
+    <section class="panel" id="favorites">
       <div class="section-heading">
-        <div><p class="eyebrow">NUR FÜR EUCH</p><h2>Eine Nachricht für dich</h2></div>
+        <div><p class="eyebrow">EURE LIEBLINGSIDEEN</p><h2>Merkliste</h2></div>
         <span class="heart">♡</span>
       </div>
-      <p class="muted">Hier entsteht euer privater Chat. Sobald wir eure beiden Konten verbunden haben, könnt ihr Nachrichten in Echtzeit austauschen.</p>
-      <div class="message-preview">
-        <div class="bubble">Ich freue mich auf unser nächstes Date. ♥</div>
-        <small>Vorschau – noch nicht gesendet</small>
+      <p class="muted" id="favoritesIntro">Speichere Date-Ideen, die dir gefallen. Du findest sie hier jederzeit wieder.</p>
+      <div id="favoritesList" class="favorites-list">
+        <p class="empty-state">Noch keine Dates gespeichert. Entdecke eine Idee und tippe auf „Merken“.</p>
       </div>
-      <button class="secondary full" id="chatInfoBtn">Nachrichten einrichten</button>
     </section>
 
     <section class="panel">
       <p class="eyebrow">EURE APP</p>
-      <h2>Zusammen verbunden</h2>
-      <p class="muted">Im nächsten Einrichtungsschritt richten wir zwei private Zugänge und einen Einladungscode ein. So bleiben eure Vorschläge und Nachrichten auf beiden Handys synchron.</p>
-      <div class="status-row"><span class="status-dot"></span><span>Lokale Vorschau aktiv · Konten noch nicht verbunden</span></div>
+      <h2>Deine persönliche Date-Sammlung</h2>
+      <p class="muted">Deine Merkliste wird auf diesem Gerät gespeichert. Deine Freundin kann Amore ebenfalls auf ihrem iPhone nutzen und dort ihre eigene Sammlung anlegen.</p>
+      <div class="status-row"><span class="status-dot"></span><span>Privat auf diesem Gerät gespeichert · keine Anmeldung nötig</span></div>
     </section>
+
   </main>
 
   <nav class="bottom-nav">
     <a class="selected" href="#discover">♥<small>Entdecken</small></a>
+    <a href="#favorites">♡<small>Merkliste</small></a>
     <a href="#ideaCard">✦<small>Dates</small></a>
-    <a href="#discover" id="navChat">♡<small>Nachrichten</small></a>
   </nav>
 
   <dialog id="infoDialog">
@@ -120,7 +119,7 @@
       <button class="close" id="closeDialog">×</button>
       <p class="eyebrow">NÄCHSTER SCHRITT</p>
       <h2 id="dialogTitle">Amore gemeinsam einrichten</h2>
-      <p id="dialogText" class="muted">Diese Vorschau funktioniert bereits auf diesem Gerät. Für echte Nachrichten, gemeinsame Konten und Push-Mitteilungen verbinden wir als Nächstes eine Supabase-Datenbank und richten den privaten Zugang für euch beide ein.</p>
+      <p id="dialogText" class="muted">Deine Date-Idee wurde gespeichert.</p>
       <button class="primary full" id="dialogOk">Alles klar</button>
     </div>
   </dialog>

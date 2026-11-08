@@ -58,6 +58,7 @@ function chooseIdea() {
   $("ideaTag").textContent = currentIdea.tag;
   $("ideaImage").style.background = currentIdea.image;
   $("ideaCard").hidden = false;
+  updateSaveButton();
   $("ideaCard").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -70,10 +71,79 @@ function openInfo(title, text) {
   $("infoDialog").showModal();
 }
 
-$("sendIdeaBtn").addEventListener("click", () => openInfo("Date-Vorschlag", "Die Idee ist ausgewählt. Im nächsten Schritt verbinden wir eure Konten, damit du sie direkt an deine Freundin senden kannst."));
-$("chatInfoBtn").addEventListener("click", () => openInfo("Euer privater Chat", "Echte Nachrichten benötigen ein gemeinsames Backend. Wir richten im nächsten Schritt Supabase ein und verbinden dann beide Handys."));
-$("settingsBtn").addEventListener("click", () => openInfo("Amore-Einstellungen", "Hier ergänzen wir später eure Namen, euren Einladungscode und Benachrichtigungseinstellungen."));
-$("navChat").addEventListener("click", e => { e.preventDefault(); openInfo("Nachrichten", "Der Chat wird nach dem Verbinden eurer beiden Konten aktiviert."); });
+const FAVORITES_KEY = "amore-favorites-v1";
+let favorites = loadFavorites();
+
+function loadFavorites() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFavorites() {
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  renderFavorites();
+}
+
+function renderFavorites() {
+  const list = $("favoritesList");
+  list.replaceChildren();
+  if (!favorites.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Noch keine Dates gespeichert. Entdecke eine Idee und tippe auf „Merken“.";
+    list.appendChild(empty);
+    return;
+  }
+  favorites.forEach((idea, index) => {
+    const item = document.createElement("article");
+    item.className = "favorite-item";
+    const swatch = document.createElement("div");
+    swatch.className = "favorite-swatch";
+    swatch.style.background = idea.image;
+    const copy = document.createElement("div");
+    copy.className = "favorite-copy";
+    const title = document.createElement("strong");
+    title.textContent = idea.title;
+    const meta = document.createElement("small");
+    meta.textContent = `${idea.cost} · ${idea.time}`;
+    copy.append(title, meta);
+    const remove = document.createElement("button");
+    remove.className = "remove-favorite";
+    remove.type = "button";
+    remove.textContent = "Entfernen";
+    remove.addEventListener("click", () => {
+      favorites.splice(index, 1);
+      saveFavorites();
+      updateSaveButton();
+    });
+    item.append(swatch, copy, remove);
+    list.appendChild(item);
+  });
+}
+
+function updateSaveButton() {
+  if (!currentIdea) return;
+  const saved = favorites.some(idea => idea.title === currentIdea.title);
+  $("saveIdeaBtn").textContent = saved ? "♥ Gespeichert" : "♡ Merken";
+  $("saveIdeaBtn").classList.toggle("saved", saved);
+}
+
+$("saveIdeaBtn").addEventListener("click", () => {
+  if (!currentIdea) return;
+  if (favorites.some(idea => idea.title === currentIdea.title)) {
+    favorites = favorites.filter(idea => idea.title !== currentIdea.title);
+  } else {
+    favorites.unshift(currentIdea);
+  }
+  saveFavorites();
+  updateSaveButton();
+});
+
+$("settingsBtn").addEventListener("click", () => openInfo("Amore-Einstellungen", "Deine gespeicherten Date-Ideen bleiben privat auf diesem Gerät. Deine Freundin kann ihre eigene Merkliste auf ihrem iPhone führen."));
 $("closeDialog").addEventListener("click", () => $("infoDialog").close());
 $("dialogOk").addEventListener("click", () => $("infoDialog").close());
 $("todayLabel").textContent = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" }).format(new Date()).toUpperCase();
@@ -88,3 +158,4 @@ function updateTogetherCounter() {
   $("anniversaryLabel").textContent = "Seit dem 28.06.2025";
 }
 updateTogetherCounter();
+renderFavorites();
